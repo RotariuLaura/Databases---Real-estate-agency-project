@@ -1,0 +1,73 @@
+#1.Clientii care au vizionat proprietati de tipul 1?
+
+	 SELECT COUNT(*) FROM client 
+	 JOIN vizionare on vizionare.client_id=client.client_id
+	 JOIN proprietate on proprietate.proprietate_id=vizionare.proprietate_id
+	 WHERE proprietate.tip_proprietate_id=1;
+ 
+#2.Ce proprietari au proprietati in orasul Cluj si Bucuresti?
+
+	 SELECT nume,prenume FROM proprietar 
+	 JOIN proprietate on proprietate.proprietar_id=proprietar.proprietar_id
+	 JOIN adresa on adresa.adresa_id=proprietate.adresa_adresa_id
+	 WHERE adresa.oras in ("Cluj","Bucuresti")
+	 GROUP BY nume, prenume;
+ 
+ #3.Ce clienti au inchiriat proprietatile pe care le-au vizionat?
+	 SELECT nume,prenume FROM client 
+	 JOIN vizionare on vizionare.client_id=client.client_id
+	 WHERE vizionare.inchiriere = 'DA'
+	 GROUP BY nume, prenume;
+  
+ #4. Afisati clientii care au inchiriat proprietati in anul 2022.
+ 
+	 SELECT nume,prenume FROM client 
+	 JOIN inchiriere on inchiriere.client_id=client.client_id
+	 WHERE year(inchiriere.data_inchirierii)="2022"
+     ORDER BY client.client_id ASC;
+ 
+ #5. Ce agent se ocupa de proprietatea de pe strada Dorobantilor?
+	 SELECT nume,prenume FROM agent 
+	 JOIN proprietate on proprietate.agent_id=agent.agent_id
+	 JOIN adresa on adresa.adresa_id=proprietate.adresa_adresa_id
+	 WHERE adresa.strada="Dorobantilor";
+
+#6. Afisati proprietarii care au proprietati de tipul 1.
+
+	SELECT nume,prenume FROM proprietar 
+	JOIN proprietate on proprietate.proprietar_id=proprietar.proprietar_id
+	WHERE proprietate.tip_proprietate_id=1;
+
+#7. Ce clienti au vizionat in data de 20.04.2022 proprietati?
+
+	SELECT nume,prenume FROM client 
+	JOIN vizionare on vizionare.client_id=client.client_id
+	WHERE vizionare.data_vizionarii='2022-04-20'
+	GROUP BY nume, prenume
+	ORDER BY client.client_id ASC;
+
+#8. Clientii care au vizionat proprietatea 2?
+
+	SELECT nume,prenume FROM client 
+	JOIN vizionare on vizionare.client_id=client.client_id
+	WHERE vizionare.proprietate_id=2;
+
+#9. Proprietarul proprietatii vizionate de clientul 4 in data de 10.08.2022?
+
+	SELECT * FROM proprietar
+	JOIN proprietate on proprietar.proprietar_id=proprietate.proprietar_id
+    JOIN vizionare on vizionare.proprietate_id=proprietate.proprietate_id
+    JOIN client on client.client_id=vizionare.client_id
+	WHERE client.client_id=4 AND vizionare.data_vizionarii='2022-08-10';
+
+#10. De care proprietati se ocupa agentul cu numele Rusu Ionut?
+	SELECT * FROM proprietate
+	LEFT JOIN agent on agent.agent_id=proprietate.agent_id
+	WHERE agent.nume='Rusu' AND agent.prenume = 'Ionut';
+
+
+#11. Ce clienti au vizionat mai multe proprietati?
+
+	SELECT nume,prenume FROM client
+	JOIN vizionare on vizionare.client_id=client.client_id
+	GROUP BY vizionare.client_id HAVING COUNT(*)>1;
